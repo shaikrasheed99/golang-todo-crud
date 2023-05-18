@@ -25,6 +25,17 @@ func main() {
 		c.IndentedJSON(http.StatusOK, todos)
 	})
 
+	r.POST("/todos", func(c *gin.Context) {
+		var newTodo Todo
+
+		if err := c.BindJSON(&newTodo); err != nil {
+			return
+		}
+
+		todos = append(todos, newTodo)
+		c.IndentedJSON(http.StatusCreated, newTodo)
+	})
+
 	r.GET("/test", func(c *gin.Context) {
 		c.IndentedJSON(http.StatusOK, gin.H{
 			"message": "This is test api!!",
