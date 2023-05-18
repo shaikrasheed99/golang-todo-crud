@@ -21,6 +21,10 @@ var todos = []Todo{
 func main() {
 	r := gin.Default()
 
+	r.GET("/todos", func(c *gin.Context) {
+		c.IndentedJSON(http.StatusOK, todos)
+	})
+
 	r.GET("/test", func(c *gin.Context) {
 		c.IndentedJSON(http.StatusOK, gin.H{
 			"message": "This is test api!!",
