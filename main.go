@@ -6,6 +6,18 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+type Todo struct {
+	Id          int    `json:"id"`
+	Description string `json:"description"`
+	Priority    string `json:"priority"`
+}
+
+var todos = []Todo{
+	{Id: 1, Description: "Sleeping", Priority: "high"},
+	{Id: 3, Description: "Reading", Priority: "medium"},
+	{Id: 2, Description: "Playing", Priority: "low"},
+}
+
 func main() {
 	r := gin.Default()
 
