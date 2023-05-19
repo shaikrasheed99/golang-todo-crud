@@ -3,50 +3,39 @@ package main
 import (
 	"net/http"
 	"strconv"
+	"todo-crud/models"
 
 	"github.com/gin-gonic/gin"
 )
-
-type Todo struct {
-	Id          int    `json:"id"`
-	Description string `json:"description"`
-	Priority    string `json:"priority"`
-}
-
-var todos = []Todo{
-	{Id: 1, Description: "Sleeping", Priority: "high"},
-	{Id: 3, Description: "Reading", Priority: "medium"},
-	{Id: 2, Description: "Playing", Priority: "low"},
-}
 
 func main() {
 	r := gin.Default()
 
 	r.GET("/todos", func(c *gin.Context) {
-		c.IndentedJSON(http.StatusOK, todos)
+		c.IndentedJSON(http.StatusOK, models.Todos)
 	})
 
 	r.POST("/todos", func(c *gin.Context) {
-		var newTodo Todo
+		var newTodo models.Todo
 
 		if err := c.BindJSON(&newTodo); err != nil {
 			return
 		}
 
-		todos = append(todos, newTodo)
+		models.Todos = append(models.Todos, newTodo)
 		c.IndentedJSON(http.StatusCreated, newTodo)
 	})
 
 	r.PUT("/todos/:id", func(c *gin.Context) {
 		id, _ := strconv.Atoi(c.Param("id"))
 
-		for index, todo := range todos {
+		for index, todo := range models.Todos {
 			if todo.Id == id {
-				var newTodo Todo
+				var newTodo models.Todo
 				c.BindJSON(&newTodo)
 				newTodo.Id = id
-				todos = append(todos[:index], todos[index+1:]...)
-				todos = append(todos, newTodo)
+				models.Todos = append(models.Todos[:index], models.Todos[index+1:]...)
+				models.Todos = append(models.Todos, newTodo)
 				c.IndentedJSON(http.StatusCreated, newTodo)
 				return
 			}
@@ -60,9 +49,9 @@ func main() {
 	r.DELETE("/todos/:id", func(c *gin.Context) {
 		id, _ := strconv.Atoi(c.Param("id"))
 
-		for index, todo := range todos {
+		for index, todo := range models.Todos {
 			if todo.Id == id {
-				todos = append(todos[:index], todos[index+1:]...)
+				models.Todos = append(models.Todos[:index], models.Todos[index+1:]...)
 				c.IndentedJSON(http.StatusCreated, gin.H{
 					"message": "Deleted!!",
 				})
