@@ -57,6 +57,24 @@ func main() {
 		})
 	})
 
+	r.DELETE("/todos/:id", func(c *gin.Context) {
+		id, _ := strconv.Atoi(c.Param("id"))
+
+		for index, todo := range todos {
+			if todo.Id == id {
+				todos = append(todos[:index], todos[index+1:]...)
+				c.IndentedJSON(http.StatusCreated, gin.H{
+					"message": "Deleted!!",
+				})
+				return
+			}
+		}
+
+		c.IndentedJSON(http.StatusBadRequest, gin.H{
+			"message": "Todo id is not found",
+		})
+	})
+
 	r.GET("/test", func(c *gin.Context) {
 		c.IndentedJSON(http.StatusOK, gin.H{
 			"message": "This is test api!!",
