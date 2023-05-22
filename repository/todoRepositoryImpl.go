@@ -3,6 +3,7 @@ package repository
 import (
 	"todo-crud/helper"
 	"todo-crud/models"
+	"todo-crud/request"
 
 	"gorm.io/gorm"
 )
@@ -28,7 +29,13 @@ func (t *TodoRepositoryImpl) Save(todo models.Todo) {
 }
 
 func (t *TodoRepositoryImpl) Update(todo models.Todo) {
-	result := t.Db.Model(&todo).Updates(todo)
+	updateTodo := request.UpdateTodoRequest{
+		Id:          todo.Id,
+		Description: todo.Description,
+		Priority:    todo.Priority,
+	}
+
+	result := t.Db.Model(&todo).Updates(updateTodo)
 	helper.LogAndPanicError(result.Error)
 }
 
