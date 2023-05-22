@@ -6,14 +6,14 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func InitRoutes() *gin.Engine {
+func InitRoutes(todoController *controllers.TodoController) *gin.Engine {
 	r := gin.Default()
 
-	r.GET("/todos", controllers.GetTodos)
-	r.POST("/todos", controllers.AddTodo)
-	r.PUT("/todos/:id", controllers.UpdateTodoById)
-	r.DELETE("/todos/:id", controllers.DeleteTodoById)
-	r.GET("/test", controllers.TestController)
+	r.GET("/todos", todoController.GetAll)
+	r.POST("/todos", todoController.Create)
+	r.PUT("/todos/:id", todoController.Update)
+	r.DELETE("/todos/:id", todoController.Delete)
+	r.GET("/test", todoController.TestController)
 
 	return r
 }

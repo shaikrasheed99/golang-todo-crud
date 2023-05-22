@@ -84,7 +84,7 @@ func (controllers *TodoController) Delete(c *gin.Context) {
 	c.JSON(http.StatusOK, response)
 }
 
-func TestController(c *gin.Context) {
+func (controllers *TodoController) TestController(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, gin.H{
 		"message": "This is test api!!",
 	})
