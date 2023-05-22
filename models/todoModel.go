@@ -1,9 +1,9 @@
 package models
 
 type Todo struct {
-	Id          int    `json:"id"`
-	Description string `json:"description"`
-	Priority    string `json:"priority"`
+	Id          int    `gorm:"type:int;primary_key"`
+	Description string `gorm:"type:varchar(255)"`
+	Priority    string `gorm:"type:varchar(255)"`
 }
 
 var Todos = []Todo{
