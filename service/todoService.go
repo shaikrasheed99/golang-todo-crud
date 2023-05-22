@@ -1,10 +1,13 @@
 package service
 
-import "todo-crud/models"
+import (
+	"todo-crud/request"
+	"todo-crud/response"
+)
 
 type TodoService interface {
-	GetAll() []models.Todo
-	Create(todo models.Todo)
-	Update(todo models.Todo)
+	GetAll() []response.TodoResponse
+	Create(todo request.CreateTodoRequest)
+	Update(todo request.UpdateTodoRequest)
 	Delete(todoId int)
 }

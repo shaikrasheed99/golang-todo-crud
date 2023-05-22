@@ -3,63 +3,85 @@ package controllers
 import (
 	"net/http"
 	"strconv"
-	"todo-crud/models"
+	"todo-crud/helper"
+	"todo-crud/request"
+	"todo-crud/response"
+	"todo-crud/service"
 
 	"github.com/gin-gonic/gin"
 )
 
-func GetTodos(c *gin.Context) {
-	c.IndentedJSON(http.StatusOK, models.Todos)
+type TodoController struct {
+	todoService service.TodoService
 }
 
-func AddTodo(c *gin.Context) {
-	var newTodo models.Todo
-
-	if err := c.BindJSON(&newTodo); err != nil {
-		return
-	}
-
-	models.Todos = append(models.Todos, newTodo)
-	c.IndentedJSON(http.StatusCreated, newTodo)
+func NewTodoController(todoService service.TodoService) *TodoController {
+	return &TodoController{todoService: todoService}
 }
 
-func UpdateTodoById(c *gin.Context) {
+func (controllers *TodoController) GetAll(c *gin.Context) {
+	todos := controllers.todoService.GetAll()
 
-	id, _ := strconv.Atoi(c.Param("id"))
-
-	for index, todo := range models.Todos {
-		if todo.Id == id {
-			var newTodo models.Todo
-			c.BindJSON(&newTodo)
-			newTodo.Id = id
-			models.Todos = append(models.Todos[:index], models.Todos[index+1:]...)
-			models.Todos = append(models.Todos, newTodo)
-			c.IndentedJSON(http.StatusCreated, newTodo)
-			return
-		}
+	response := response.ResponseBody{
+		Code:   http.StatusOK,
+		Status: http.StatusText(http.StatusOK),
+		Data:   todos,
 	}
 
-	c.IndentedJSON(http.StatusBadRequest, gin.H{
-		"message": "Todo id is not found",
-	})
+	c.JSON(http.StatusOK, response)
 }
 
-func DeleteTodoById(c *gin.Context) {
-	id, _ := strconv.Atoi(c.Param("id"))
+func (controllers *TodoController) Create(c *gin.Context) {
+	createTodoRequest := request.CreateTodoRequest{}
+	err := c.ShouldBindJSON(&createTodoRequest)
+	helper.LogAndPanicError(err)
 
-	for index, todo := range models.Todos {
-		if todo.Id == id {
-			models.Todos = append(models.Todos[:index], models.Todos[index+1:]...)
-			c.IndentedJSON(http.StatusCreated, gin.H{
-				"message": "Deleted!!",
-			})
-			return
-		}
+	controllers.todoService.Create(createTodoRequest)
+
+	response := response.ResponseBody{
+		Code:   http.StatusCreated,
+		Status: http.StatusText(http.StatusCreated),
+		Data:   createTodoRequest,
 	}
 
-	c.IndentedJSON(http.StatusBadRequest, gin.H{
-		"message": "Todo id is not found",
-	})
+	c.JSON(http.StatusCreated, response)
+}
+
+func (controllers *TodoController) Update(c *gin.Context) {
+	updateTodoRequest := request.UpdateTodoRequest{}
+	err := c.ShouldBindJSON(&updateTodoRequest)
+	helper.LogAndPanicError(err)
+
+	todoId := c.Param("id")
+	id, err := strconv.Atoi(todoId)
+	helper.LogAndPanicError(err)
+	updateTodoRequest.Id = id
+
+	controllers.todoService.Update(updateTodoRequest)
+
+	response := response.ResponseBody{
+		Code:   http.StatusOK,
+		Status: http.StatusText(http.StatusOK),
+		Data:   updateTodoRequest,
+	}
+
+	c.JSON(http.StatusOK, response)
+}
+
+func (controllers *TodoController) Delete(c *gin.Context) {
+	todoId := c.Param("id")
+	id, err := strconv.Atoi(todoId)
+	helper.LogAndPanicError(err)
+
+	controllers.todoService.Delete(id)
+
+	response := response.ResponseBody{
+		Code:   http.StatusOK,
+		Status: http.StatusText(http.StatusOK),
+		Data:   "Deleted!!",
+	}
+
+	c.JSON(http.StatusOK, response)
 }
 
 func TestController(c *gin.Context) {
