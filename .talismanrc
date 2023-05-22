@@ -1,5 +1,6 @@
 fileignoreconfig:
-
-- filename: go.sum
-  checksum: f4174b72e198075d13ddf5333216a2e4647b9ac1e3a9adce1602bb9c13fa0e33
-  version: ""
+  - filename: go.sum
+    checksum: f4174b72e198075d13ddf5333216a2e4647b9ac1e3a9adce1602bb9c13fa0e33
+  - filename: config/database.go
+    checksum: ff800a8a8e03e08a90518ad9b48efb7160e33b99078489e6fcc004fc111796bf
+version: ""
