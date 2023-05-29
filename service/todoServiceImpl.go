@@ -45,7 +45,6 @@ func (t *TodoServiceImpl) Create(todo request.CreateTodoRequest) {
 	helper.LogAndPanicError(validationError)
 
 	todoModel := models.Todo{
-		Id:          todo.Id,
 		Description: todo.Description,
 		Priority:    todo.Priority,
 	}
@@ -58,7 +57,6 @@ func (t *TodoServiceImpl) Update(todo request.UpdateTodoRequest) {
 	helper.LogAndPanicError(validationError)
 
 	todoModel := models.Todo{
-		Id:          todo.Id,
 		Description: todo.Description,
 		Priority:    todo.Priority,
 	}
