@@ -33,8 +33,8 @@ func (controllers *TodoController) GetAll(c *gin.Context) {
 
 func (controllers *TodoController) GetById(c *gin.Context) {
 	requestId := c.Param("id")
-	todoId, err := strconv.Atoi(requestId)
 
+	todoId, err := strconv.Atoi(requestId)
 	helper.LogAndPanicError(err)
 
 	todo := controllers.todoService.GetById(todoId)
@@ -66,10 +66,8 @@ func (controllers *TodoController) Update(c *gin.Context) {
 	requestId := c.Param("id")
 	todoId, err := strconv.Atoi(requestId)
 	helper.LogAndPanicError(err)
-	println(todoId)
-	// updateTodoRequest.Id = id
 
-	controllers.todoService.Update(updateTodoRequest)
+	controllers.todoService.Update(todoId, updateTodoRequest)
 
 	response := response.ResponseBody{
 		Code:   http.StatusOK,
@@ -81,11 +79,11 @@ func (controllers *TodoController) Update(c *gin.Context) {
 }
 
 func (controllers *TodoController) Delete(c *gin.Context) {
-	todoId := c.Param("id")
-	id, err := strconv.Atoi(todoId)
+	requestId := c.Param("id")
+	todoId, err := strconv.Atoi(requestId)
 	helper.LogAndPanicError(err)
 
-	controllers.todoService.Delete(id)
+	controllers.todoService.Delete(todoId)
 
 	response := response.ResponseBody{
 		Code:   http.StatusOK,

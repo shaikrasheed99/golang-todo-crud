@@ -73,18 +73,31 @@ func (t *TodoServiceImpl) Create(todo request.CreateTodoRequest) {
 	t.TodoRepository.Save(todoModel)
 }
 
-func (t *TodoServiceImpl) Update(todo request.UpdateTodoRequest) {
-	validationError := t.Validate.Struct(todo)
+func (t *TodoServiceImpl) Update(todoId int, requestTodo request.UpdateTodoRequest) {
+	validationError := t.Validate.Struct(requestTodo)
 	helper.LogAndPanicError(validationError)
 
-	todoModel := models.Todo{
-		Description: todo.Description,
-		Priority:    todo.Priority,
+	todoById := t.TodoRepository.FindById(todoId)
+
+	if isTodoEmpty(todoById) {
+		helper.LogAndPanicError(errors.New("there is no todo with this id"))
 	}
 
-	t.TodoRepository.Update(todoModel)
+	newTodo := models.Todo{
+		Id:          todoById.Id,
+		Description: requestTodo.Description,
+		Priority:    requestTodo.Priority,
+	}
+
+	t.TodoRepository.Update(todoId, newTodo)
 }
 
 func (t *TodoServiceImpl) Delete(todoId int) {
+	todoById := t.TodoRepository.FindById(todoId)
+
+	if isTodoEmpty(todoById) {
+		helper.LogAndPanicError(errors.New("there is no todo with this id"))
+	}
+
 	t.TodoRepository.Delete(todoId)
 }
