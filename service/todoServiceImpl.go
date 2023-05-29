@@ -61,16 +61,24 @@ func (t *TodoServiceImpl) GetById(todoId int) response.TodoResponse {
 	return todoResponse
 }
 
-func (t *TodoServiceImpl) Create(todo request.CreateTodoRequest) {
-	validationError := t.Validate.Struct(todo)
+func (t *TodoServiceImpl) Create(todoRequest request.CreateTodoRequest) response.TodoResponse {
+	validationError := t.Validate.Struct(todoRequest)
 	helper.LogAndPanicError(validationError)
 
-	todoModel := models.Todo{
-		Description: todo.Description,
-		Priority:    todo.Priority,
+	newTodo := models.Todo{
+		Description: todoRequest.Description,
+		Priority:    todoRequest.Priority,
 	}
 
-	t.TodoRepository.Save(todoModel)
+	createdTodo := t.TodoRepository.Save(newTodo)
+
+	todoResponse := response.TodoResponse{
+		Id:          createdTodo.Id,
+		Description: createdTodo.Description,
+		Priority:    createdTodo.Priority,
+	}
+
+	return todoResponse
 }
 
 func (t *TodoServiceImpl) Update(todoId int, requestTodo request.UpdateTodoRequest) {

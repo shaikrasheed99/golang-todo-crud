@@ -29,9 +29,10 @@ func (t *TodoRepositoryImpl) FindById(todoId int) models.Todo {
 	return todo
 }
 
-func (t *TodoRepositoryImpl) Save(todo models.Todo) {
+func (t *TodoRepositoryImpl) Save(todo models.Todo) models.Todo {
 	result := t.Db.Create(&todo)
 	helper.LogAndPanicError(result.Error)
+	return todo
 }
 
 func (t *TodoRepositoryImpl) Update(todoId int, newTodo models.Todo) {

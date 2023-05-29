@@ -8,7 +8,7 @@ import (
 type TodoService interface {
 	GetAll() []response.TodoResponse
 	GetById(todoId int) response.TodoResponse
-	Create(todo request.CreateTodoRequest)
+	Create(todo request.CreateTodoRequest) response.TodoResponse
 	Update(todoId int, todo request.UpdateTodoRequest)
 	Delete(todoId int)
 }

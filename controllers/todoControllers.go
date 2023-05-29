@@ -39,7 +39,13 @@ func (controllers *TodoController) GetById(c *gin.Context) {
 
 	todo := controllers.todoService.GetById(todoId)
 
-	c.IndentedJSON(http.StatusOK, todo)
+	response := response.ResponseBody{
+		Code:   http.StatusOK,
+		Status: http.StatusText(http.StatusOK),
+		Data:   todo,
+	}
+
+	c.IndentedJSON(http.StatusOK, response)
 }
 
 func (controllers *TodoController) Create(c *gin.Context) {
@@ -47,12 +53,12 @@ func (controllers *TodoController) Create(c *gin.Context) {
 	err := c.ShouldBindJSON(&createTodoRequest)
 	helper.LogAndPanicError(err)
 
-	controllers.todoService.Create(createTodoRequest)
+	createdTodo := controllers.todoService.Create(createTodoRequest)
 
 	response := response.ResponseBody{
 		Code:   http.StatusCreated,
 		Status: http.StatusText(http.StatusCreated),
-		Data:   createTodoRequest,
+		Data:   createdTodo,
 	}
 
 	c.JSON(http.StatusCreated, response)
