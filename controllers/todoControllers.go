@@ -22,11 +22,7 @@ func NewTodoController(todoService service.TodoService) *TodoController {
 func (tc *TodoController) GetAll(c *gin.Context) {
 	todos := tc.todoService.GetAll()
 
-	response := response.ResponseBody{
-		Code:   http.StatusOK,
-		Status: http.StatusText(http.StatusOK),
-		Data:   todos,
-	}
+	response := createResponseBody(http.StatusOK, todos)
 
 	c.JSON(http.StatusOK, response)
 }
@@ -39,11 +35,7 @@ func (tc *TodoController) GetById(c *gin.Context) {
 
 	todo := tc.todoService.GetById(todoId)
 
-	response := response.ResponseBody{
-		Code:   http.StatusOK,
-		Status: http.StatusText(http.StatusOK),
-		Data:   todo,
-	}
+	response := createResponseBody(http.StatusOK, todo)
 
 	c.IndentedJSON(http.StatusOK, response)
 }
@@ -55,11 +47,7 @@ func (tc *TodoController) Create(c *gin.Context) {
 
 	createdTodo := tc.todoService.Create(createTodoRequest)
 
-	response := response.ResponseBody{
-		Code:   http.StatusCreated,
-		Status: http.StatusText(http.StatusCreated),
-		Data:   createdTodo,
-	}
+	response := createResponseBody(http.StatusCreated, createdTodo)
 
 	c.JSON(http.StatusCreated, response)
 }
@@ -75,11 +63,7 @@ func (tc *TodoController) Update(c *gin.Context) {
 
 	updatedTodo := tc.todoService.Update(todoId, updateTodoRequest)
 
-	response := response.ResponseBody{
-		Code:   http.StatusOK,
-		Status: http.StatusText(http.StatusOK),
-		Data:   updatedTodo,
-	}
+	response := createResponseBody(http.StatusOK, updatedTodo)
 
 	c.JSON(http.StatusOK, response)
 }
@@ -91,11 +75,7 @@ func (tc *TodoController) Delete(c *gin.Context) {
 
 	tc.todoService.Delete(todoId)
 
-	response := response.ResponseBody{
-		Code:   http.StatusOK,
-		Status: http.StatusText(http.StatusOK),
-		Data:   "Deleted!!",
-	}
+	response := createResponseBody(http.StatusOK, "Deleted!!")
 
 	c.JSON(http.StatusOK, response)
 }
@@ -104,4 +84,12 @@ func (tc *TodoController) TestController(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, gin.H{
 		"message": "This is test api!!",
 	})
+}
+
+func createResponseBody(code int, data interface{}) response.ResponseBody {
+	return response.ResponseBody{
+		Code:   code,
+		Status: http.StatusText(code),
+		Data:   data,
+	}
 }
