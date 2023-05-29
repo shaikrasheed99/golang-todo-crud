@@ -24,21 +24,16 @@ func NewTodoServiceImpl(todoRepository repository.TodoRepository, validate *vali
 }
 
 func (t *TodoServiceImpl) GetAll() []response.TodoResponse {
-	result := t.TodoRepository.FindAll()
+	todos := t.TodoRepository.FindAll()
 
-	var todos []response.TodoResponse
+	var todosResponse []response.TodoResponse
 
-	for _, value := range result {
-		todo := response.TodoResponse{
-			Id:          value.Id,
-			Description: value.Description,
-			Priority:    value.Priority,
-		}
-
-		todos = append(todos, todo)
+	for _, value := range todos {
+		todo := response.TodoResponse(value)
+		todosResponse = append(todosResponse, todo)
 	}
 
-	return todos
+	return todosResponse
 }
 
 func isTodoEmpty(todo models.Todo) bool {
@@ -52,11 +47,7 @@ func (t *TodoServiceImpl) GetById(todoId int) response.TodoResponse {
 		helper.LogAndPanicError(errors.New("there is no todo with this id"))
 	}
 
-	todoResponse := response.TodoResponse{
-		Id:          todo.Id,
-		Description: todo.Description,
-		Priority:    todo.Priority,
-	}
+	todoResponse := response.TodoResponse(todo)
 
 	return todoResponse
 }
