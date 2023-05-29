@@ -30,7 +30,6 @@ func (t *TodoRepositoryImpl) Save(todo models.Todo) {
 
 func (t *TodoRepositoryImpl) Update(todo models.Todo) {
 	updateTodo := request.UpdateTodoRequest{
-		Id:          todo.Id,
 		Description: todo.Description,
 		Priority:    todo.Priority,
 	}

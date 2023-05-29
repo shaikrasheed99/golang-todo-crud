@@ -55,7 +55,8 @@ func (controllers *TodoController) Update(c *gin.Context) {
 	todoId := c.Param("id")
 	id, err := strconv.Atoi(todoId)
 	helper.LogAndPanicError(err)
-	updateTodoRequest.Id = id
+	println(id)
+	// updateTodoRequest.Id = id
 
 	controllers.todoService.Update(updateTodoRequest)
 
