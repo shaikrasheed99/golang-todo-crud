@@ -31,6 +31,17 @@ func (controllers *TodoController) GetAll(c *gin.Context) {
 	c.JSON(http.StatusOK, response)
 }
 
+func (controllers *TodoController) GetById(c *gin.Context) {
+	requestId := c.Param("id")
+	todoId, err := strconv.Atoi(requestId)
+
+	helper.LogAndPanicError(err)
+
+	todo := controllers.todoService.GetById(todoId)
+
+	c.IndentedJSON(http.StatusOK, todo)
+}
+
 func (controllers *TodoController) Create(c *gin.Context) {
 	createTodoRequest := request.CreateTodoRequest{}
 	err := c.ShouldBindJSON(&createTodoRequest)
@@ -52,10 +63,10 @@ func (controllers *TodoController) Update(c *gin.Context) {
 	err := c.ShouldBindJSON(&updateTodoRequest)
 	helper.LogAndPanicError(err)
 
-	todoId := c.Param("id")
-	id, err := strconv.Atoi(todoId)
+	requestId := c.Param("id")
+	todoId, err := strconv.Atoi(requestId)
 	helper.LogAndPanicError(err)
-	println(id)
+	println(todoId)
 	// updateTodoRequest.Id = id
 
 	controllers.todoService.Update(updateTodoRequest)

@@ -10,6 +10,7 @@ func InitRoutes(todoController *controllers.TodoController) *gin.Engine {
 	r := gin.Default()
 
 	r.GET("/todos", todoController.GetAll)
+	r.GET("/todos/:id", todoController.GetById)
 	r.POST("/todos", todoController.Create)
 	r.PUT("/todos/:id", todoController.Update)
 	r.DELETE("/todos/:id", todoController.Delete)
