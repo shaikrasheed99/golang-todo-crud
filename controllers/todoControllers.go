@@ -73,12 +73,12 @@ func (controllers *TodoController) Update(c *gin.Context) {
 	todoId, err := strconv.Atoi(requestId)
 	helper.LogAndPanicError(err)
 
-	controllers.todoService.Update(todoId, updateTodoRequest)
+	updatedTodo := controllers.todoService.Update(todoId, updateTodoRequest)
 
 	response := response.ResponseBody{
 		Code:   http.StatusOK,
 		Status: http.StatusText(http.StatusOK),
-		Data:   updateTodoRequest,
+		Data:   updatedTodo,
 	}
 
 	c.JSON(http.StatusOK, response)

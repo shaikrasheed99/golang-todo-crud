@@ -61,27 +61,23 @@ func (t *TodoServiceImpl) GetById(todoId int) response.TodoResponse {
 	return todoResponse
 }
 
-func (t *TodoServiceImpl) Create(todoRequest request.CreateTodoRequest) response.TodoResponse {
-	validationError := t.Validate.Struct(todoRequest)
+func (t *TodoServiceImpl) Create(requestTodo request.CreateTodoRequest) response.TodoResponse {
+	validationError := t.Validate.Struct(requestTodo)
 	helper.LogAndPanicError(validationError)
 
 	newTodo := models.Todo{
-		Description: todoRequest.Description,
-		Priority:    todoRequest.Priority,
+		Description: requestTodo.Description,
+		Priority:    requestTodo.Priority,
 	}
 
 	createdTodo := t.TodoRepository.Save(newTodo)
 
-	todoResponse := response.TodoResponse{
-		Id:          createdTodo.Id,
-		Description: createdTodo.Description,
-		Priority:    createdTodo.Priority,
-	}
+	todoResponse := response.TodoResponse(createdTodo)
 
 	return todoResponse
 }
 
-func (t *TodoServiceImpl) Update(todoId int, requestTodo request.UpdateTodoRequest) {
+func (t *TodoServiceImpl) Update(todoId int, requestTodo request.UpdateTodoRequest) response.TodoResponse {
 	validationError := t.Validate.Struct(requestTodo)
 	helper.LogAndPanicError(validationError)
 
@@ -98,6 +94,10 @@ func (t *TodoServiceImpl) Update(todoId int, requestTodo request.UpdateTodoReque
 	}
 
 	t.TodoRepository.Update(todoId, newTodo)
+
+	todoResponse := response.TodoResponse(newTodo)
+
+	return todoResponse
 }
 
 func (t *TodoServiceImpl) Delete(todoId int) {
