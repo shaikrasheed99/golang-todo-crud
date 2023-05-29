@@ -1,6 +1,7 @@
 package service
 
 import (
+	"errors"
 	"todo-crud/helper"
 	"todo-crud/models"
 	"todo-crud/repository"
@@ -38,6 +39,26 @@ func (t *TodoServiceImpl) GetAll() []response.TodoResponse {
 	}
 
 	return todos
+}
+
+func isTodoEmpty(todo models.Todo) bool {
+	return (todo.Id == 0 && todo.Description == "" && todo.Priority == "")
+}
+
+func (t *TodoServiceImpl) GetById(todoId int) response.TodoResponse {
+	todo := t.TodoRepository.FindById(todoId)
+
+	if isTodoEmpty(todo) {
+		helper.LogAndPanicError(errors.New("there is no todo with this id"))
+	}
+
+	todoResponse := response.TodoResponse{
+		Id:          todo.Id,
+		Description: todo.Description,
+		Priority:    todo.Priority,
+	}
+
+	return todoResponse
 }
 
 func (t *TodoServiceImpl) Create(todo request.CreateTodoRequest) {

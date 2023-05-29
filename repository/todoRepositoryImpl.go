@@ -23,6 +23,13 @@ func (t *TodoRepositoryImpl) FindAll() []models.Todo {
 	return todos
 }
 
+func (t *TodoRepositoryImpl) FindById(todoId int) models.Todo {
+	var todo models.Todo
+	result := t.Db.Where("id = ?", todoId).Find(&todo)
+	helper.LogAndPanicError(result.Error)
+	return todo
+}
+
 func (t *TodoRepositoryImpl) Save(todo models.Todo) {
 	result := t.Db.Create(&todo)
 	helper.LogAndPanicError(result.Error)
