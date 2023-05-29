@@ -19,8 +19,8 @@ func NewTodoController(todoService service.TodoService) *TodoController {
 	return &TodoController{todoService: todoService}
 }
 
-func (controllers *TodoController) GetAll(c *gin.Context) {
-	todos := controllers.todoService.GetAll()
+func (tc *TodoController) GetAll(c *gin.Context) {
+	todos := tc.todoService.GetAll()
 
 	response := response.ResponseBody{
 		Code:   http.StatusOK,
@@ -31,13 +31,13 @@ func (controllers *TodoController) GetAll(c *gin.Context) {
 	c.JSON(http.StatusOK, response)
 }
 
-func (controllers *TodoController) GetById(c *gin.Context) {
+func (tc *TodoController) GetById(c *gin.Context) {
 	requestId := c.Param("id")
 
 	todoId, err := strconv.Atoi(requestId)
 	helper.LogAndPanicError(err)
 
-	todo := controllers.todoService.GetById(todoId)
+	todo := tc.todoService.GetById(todoId)
 
 	response := response.ResponseBody{
 		Code:   http.StatusOK,
@@ -48,12 +48,12 @@ func (controllers *TodoController) GetById(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, response)
 }
 
-func (controllers *TodoController) Create(c *gin.Context) {
+func (tc *TodoController) Create(c *gin.Context) {
 	createTodoRequest := request.CreateTodoRequest{}
 	err := c.ShouldBindJSON(&createTodoRequest)
 	helper.LogAndPanicError(err)
 
-	createdTodo := controllers.todoService.Create(createTodoRequest)
+	createdTodo := tc.todoService.Create(createTodoRequest)
 
 	response := response.ResponseBody{
 		Code:   http.StatusCreated,
@@ -64,7 +64,7 @@ func (controllers *TodoController) Create(c *gin.Context) {
 	c.JSON(http.StatusCreated, response)
 }
 
-func (controllers *TodoController) Update(c *gin.Context) {
+func (tc *TodoController) Update(c *gin.Context) {
 	updateTodoRequest := request.UpdateTodoRequest{}
 	err := c.ShouldBindJSON(&updateTodoRequest)
 	helper.LogAndPanicError(err)
@@ -73,7 +73,7 @@ func (controllers *TodoController) Update(c *gin.Context) {
 	todoId, err := strconv.Atoi(requestId)
 	helper.LogAndPanicError(err)
 
-	updatedTodo := controllers.todoService.Update(todoId, updateTodoRequest)
+	updatedTodo := tc.todoService.Update(todoId, updateTodoRequest)
 
 	response := response.ResponseBody{
 		Code:   http.StatusOK,
@@ -84,12 +84,12 @@ func (controllers *TodoController) Update(c *gin.Context) {
 	c.JSON(http.StatusOK, response)
 }
 
-func (controllers *TodoController) Delete(c *gin.Context) {
+func (tc *TodoController) Delete(c *gin.Context) {
 	requestId := c.Param("id")
 	todoId, err := strconv.Atoi(requestId)
 	helper.LogAndPanicError(err)
 
-	controllers.todoService.Delete(todoId)
+	tc.todoService.Delete(todoId)
 
 	response := response.ResponseBody{
 		Code:   http.StatusOK,
@@ -100,7 +100,7 @@ func (controllers *TodoController) Delete(c *gin.Context) {
 	c.JSON(http.StatusOK, response)
 }
 
-func (controllers *TodoController) TestController(c *gin.Context) {
+func (tc *TodoController) TestController(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, gin.H{
 		"message": "This is test api!!",
 	})

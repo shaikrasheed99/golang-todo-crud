@@ -23,8 +23,8 @@ func NewTodoServiceImpl(todoRepository repository.TodoRepository, validate *vali
 	}
 }
 
-func (t *TodoServiceImpl) GetAll() []response.TodoResponse {
-	todos := t.TodoRepository.FindAll()
+func (ts *TodoServiceImpl) GetAll() []response.TodoResponse {
+	todos := ts.TodoRepository.FindAll()
 
 	var todosResponse []response.TodoResponse
 
@@ -40,8 +40,8 @@ func isTodoEmpty(todo models.Todo) bool {
 	return (todo.Id == 0 && todo.Description == "" && todo.Priority == "")
 }
 
-func (t *TodoServiceImpl) GetById(todoId int) response.TodoResponse {
-	todo := t.TodoRepository.FindById(todoId)
+func (ts *TodoServiceImpl) GetById(todoId int) response.TodoResponse {
+	todo := ts.TodoRepository.FindById(todoId)
 
 	if isTodoEmpty(todo) {
 		helper.LogAndPanicError(errors.New("there is no todo with this id"))
@@ -52,8 +52,8 @@ func (t *TodoServiceImpl) GetById(todoId int) response.TodoResponse {
 	return todoResponse
 }
 
-func (t *TodoServiceImpl) Create(requestTodo request.CreateTodoRequest) response.TodoResponse {
-	validationError := t.Validate.Struct(requestTodo)
+func (ts *TodoServiceImpl) Create(requestTodo request.CreateTodoRequest) response.TodoResponse {
+	validationError := ts.Validate.Struct(requestTodo)
 	helper.LogAndPanicError(validationError)
 
 	newTodo := models.Todo{
@@ -61,18 +61,18 @@ func (t *TodoServiceImpl) Create(requestTodo request.CreateTodoRequest) response
 		Priority:    requestTodo.Priority,
 	}
 
-	createdTodo := t.TodoRepository.Save(newTodo)
+	createdTodo := ts.TodoRepository.Save(newTodo)
 
 	todoResponse := response.TodoResponse(createdTodo)
 
 	return todoResponse
 }
 
-func (t *TodoServiceImpl) Update(todoId int, requestTodo request.UpdateTodoRequest) response.TodoResponse {
-	validationError := t.Validate.Struct(requestTodo)
+func (ts *TodoServiceImpl) Update(todoId int, requestTodo request.UpdateTodoRequest) response.TodoResponse {
+	validationError := ts.Validate.Struct(requestTodo)
 	helper.LogAndPanicError(validationError)
 
-	todoById := t.TodoRepository.FindById(todoId)
+	todoById := ts.TodoRepository.FindById(todoId)
 
 	if isTodoEmpty(todoById) {
 		helper.LogAndPanicError(errors.New("there is no todo with this id"))
@@ -84,19 +84,19 @@ func (t *TodoServiceImpl) Update(todoId int, requestTodo request.UpdateTodoReque
 		Priority:    requestTodo.Priority,
 	}
 
-	t.TodoRepository.Update(todoId, newTodo)
+	ts.TodoRepository.Update(todoId, newTodo)
 
 	todoResponse := response.TodoResponse(newTodo)
 
 	return todoResponse
 }
 
-func (t *TodoServiceImpl) Delete(todoId int) {
-	todoById := t.TodoRepository.FindById(todoId)
+func (ts *TodoServiceImpl) Delete(todoId int) {
+	todoById := ts.TodoRepository.FindById(todoId)
 
 	if isTodoEmpty(todoById) {
 		helper.LogAndPanicError(errors.New("there is no todo with this id"))
 	}
 
-	t.TodoRepository.Delete(todoId)
+	ts.TodoRepository.Delete(todoId)
 }

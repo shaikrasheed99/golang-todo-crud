@@ -16,7 +16,7 @@ const (
 	dbName   = "todos"
 )
 
-func DatabaseConnection() *gorm.DB {
+func InitDatabase() *gorm.DB {
 	connectionString := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbName)
 
 	db, err := gorm.Open(postgres.Open(connectionString), &gorm.Config{})

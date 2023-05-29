@@ -15,33 +15,33 @@ func NewTodoRepositoryImpl(Db *gorm.DB) TodoRepository {
 	return &TodoRepositoryImpl{Db: Db}
 }
 
-func (t *TodoRepositoryImpl) FindAll() []models.Todo {
+func (tr *TodoRepositoryImpl) FindAll() []models.Todo {
 	var todos []models.Todo
-	result := t.Db.Find(&todos)
+	result := tr.Db.Find(&todos)
 	helper.LogAndPanicError(result.Error)
 	return todos
 }
 
-func (t *TodoRepositoryImpl) FindById(todoId int) models.Todo {
+func (tr *TodoRepositoryImpl) FindById(todoId int) models.Todo {
 	var todo models.Todo
-	result := t.Db.Where("id = ?", todoId).Find(&todo)
+	result := tr.Db.Where("id = ?", todoId).Find(&todo)
 	helper.LogAndPanicError(result.Error)
 	return todo
 }
 
-func (t *TodoRepositoryImpl) Save(todo models.Todo) models.Todo {
-	result := t.Db.Create(&todo)
+func (tr *TodoRepositoryImpl) Save(todo models.Todo) models.Todo {
+	result := tr.Db.Create(&todo)
 	helper.LogAndPanicError(result.Error)
 	return todo
 }
 
-func (t *TodoRepositoryImpl) Update(todoId int, newTodo models.Todo) {
-	result := t.Db.Where("id = ?", todoId).Updates(newTodo)
+func (tr *TodoRepositoryImpl) Update(todoId int, newTodo models.Todo) {
+	result := tr.Db.Where("id = ?", todoId).Updates(newTodo)
 	helper.LogAndPanicError(result.Error)
 }
 
-func (t *TodoRepositoryImpl) Delete(todoId int) {
+func (tr *TodoRepositoryImpl) Delete(todoId int) {
 	var todo models.Todo
-	result := t.Db.Where("id = ?", todoId).Delete(&todo)
+	result := tr.Db.Where("id = ?", todoId).Delete(&todo)
 	helper.LogAndPanicError(result.Error)
 }

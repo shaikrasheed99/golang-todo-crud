@@ -15,14 +15,14 @@ import (
 )
 
 func main() {
-	db := config.DatabaseConnection()
-	validate := validator.New()
+	db := config.InitDatabase()
+	validator := validator.New()
 
 	db.Table("todos").AutoMigrate(&models.Todo{})
 
 	todoRepository := repository.NewTodoRepositoryImpl(db)
 
-	todoService := service.NewTodoServiceImpl(todoRepository, validate)
+	todoService := service.NewTodoServiceImpl(todoRepository, validator)
 
 	todoController := controllers.NewTodoController(todoService)
 
